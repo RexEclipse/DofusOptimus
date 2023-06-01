@@ -6,7 +6,7 @@ import java.io.DataInputStream
 import java.util.zip.InflaterInputStream
 
 
-class ByteArrayReader(byteArray: ByteArray) : DataInputStream(ByteArrayStream(byteArray)) {
+open class ByteArrayReader(byteArray: ByteArray) : DataInputStream(ByteArrayStream(byteArray)) {
 
     companion object {
         private const val MASK_10000000 = 128
