@@ -1,10 +1,12 @@
 package fr.lewon.swf.tools.reader.types.enums
 
-enum class OperandTypes {
-    OPT_U30,
-    OPT_U8,
-    OPT_S24,
-    OPT_CASE_OFFSETS,
-    OPT_S8,
-    OPT_S16,
+import fr.lewon.swf.tools.reader.SwfByteArrayReader
+
+enum class OperandTypes(val read: (SwfByteArrayReader) -> Any) {
+    OPT_U30({ it.readU30() }),
+    OPT_U8({ it.readUnsignedByte() }),
+    OPT_S24({ it.readS24() }),
+    OPT_CASE_OFFSETS({ TODO("") }),
+    OPT_S8({ it.readUnsignedByte() }),
+    OPT_S16({ it.readU30() }),
 }

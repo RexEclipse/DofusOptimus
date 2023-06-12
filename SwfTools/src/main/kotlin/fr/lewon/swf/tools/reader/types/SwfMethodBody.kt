@@ -1,6 +1,7 @@
 package fr.lewon.swf.tools.reader.types
 
 import fr.lewon.swf.tools.reader.SwfByteArrayReader
+import fr.lewon.swf.tools.reader.types.enums.SwfInstructions
 import fr.lewon.swf.tools.reader.types.traits.SwfTrait
 
 class SwfMethodBody(
@@ -35,7 +36,9 @@ class SwfMethodBody(
         val bar = SwfByteArrayReader(codeBytes)
         while (bar.available() > 0) {
             val instructionId = bar.readUnsignedByte()
-            println(instructionId)
+            val instruction = SwfInstructions.values().firstOrNull { it.id == instructionId }
+            val params = instruction?.operands?.map { it.read(bar) }
+            println("$instructionId - $instruction - $params")
         }
         return instructions
     }

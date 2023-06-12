@@ -1,6 +1,6 @@
 package fr.lewon.swf.tools.reader.types.enums
 
-enum class Instructions(val id: Int, val operands: List<OperandTypes> = emptyList()) {
+enum class SwfInstructions(val id: Int, val operands: List<OperandTypes> = emptyList()) {
     ADD(0XA0),
     ADD_INTEGER(0XC5),
     AS_TYPE(0X86),
@@ -57,7 +57,7 @@ enum class Instructions(val id: Int, val operands: List<OperandTypes> = emptyLis
     GET_REGISTER_2(0XD2),
     GET_REGISTER_3(0XD3),
     GET_PROPERTY(0X66),
-    GET_SCOPE_OBJECT(0X65),
+    GET_SCOPE_OBJECT(0X65, listOf(OperandTypes.OPT_U8)),
     GET_SLOT(0X6C),
     GET_PROP_FROM_SUPER(0X04),
     GREATER_THAN_EQUALS(0XAF),

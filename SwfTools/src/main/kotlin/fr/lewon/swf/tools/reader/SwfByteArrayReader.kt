@@ -26,6 +26,14 @@ class SwfByteArrayReader(byteArray: ByteArray) : ByteArrayReader(byteArray) {
         return ret
     }
 
+    fun readS24(): Int {
+        var ret = readUnsignedByte() + (readUnsignedByte() shl 8) + (readUnsignedByte() shl 16)
+        if (ret shr 23 == 1) {
+            ret = ret or -0x1000000
+        }
+        return ret
+    }
+
     fun readS32(): Long {
         var i: Int
         var ret: Long = 0
