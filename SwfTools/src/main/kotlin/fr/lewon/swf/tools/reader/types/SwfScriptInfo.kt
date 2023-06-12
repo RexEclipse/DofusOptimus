@@ -1,6 +1,7 @@
 package fr.lewon.swf.tools.reader.types
 
 import fr.lewon.swf.tools.reader.SwfByteArrayReader
+import fr.lewon.swf.tools.reader.types.traits.SwfTrait
 
 class SwfScriptInfo(
     var initIndex: Int = 0,

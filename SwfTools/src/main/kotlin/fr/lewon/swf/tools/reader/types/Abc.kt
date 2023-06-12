@@ -11,6 +11,11 @@ open class Abc(
     var scriptInfoList: ArrayList<SwfScriptInfo> = ArrayList(),
     var bodies: ArrayList<SwfMethodBody> = ArrayList()
 ) : SwfType {
+
+    val methodBodyByMethodInfo by lazy {
+        bodies.associateBy { methodInfoList[it.methodInfo] }
+    }
+
     override fun read(stream: SwfByteArrayReader) {
         val minorVersion = stream.readUI16()
         val majorVersion = stream.readUI16()

@@ -1,7 +1,7 @@
 package fr.lewon.swf.tools.reader
 
 import fr.lewon.dofus.bot.core.io.stream.ByteArrayReader
-import fr.lewon.swf.tools.reader.types.*
+import fr.lewon.swf.tools.reader.types.traits.*
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 

@@ -1,57 +1,50 @@
 package fr.lewon.swf.tools.reader.types
 
 import fr.lewon.swf.tools.reader.SwfByteArrayReader
+import fr.lewon.swf.tools.reader.types.enums.MultinameKinds
 
 data class SwfMultiname(
-    var kind: Int = 0,
+    var kind: MultinameKinds = MultinameKinds.QNAME,
     var nameIndex: Int = 0,
     var namespaceIndex: Int = 0,
     var namespaceSetIndex: Int = 0,
     var qnameIndex: Int = 0,
     var params: ArrayList<Int> = ArrayList()
 ) : SwfType {
-    companion object {
-        const val QNAME = 7
-        const val QNAMEA = 0x0d
-        const val RTQNAME = 0x0f
-        const val RTQNAMEA = 0x10
-        const val RTQNAMEL = 0x11
-        const val RTQNAMELA = 0x12
-        const val MULTINAME = 0x09
-        const val MULTINAMEA = 0x0e
-        const val MULTINAMEL = 0x1b
-        const val MULTINAMELA = 0x1c
-        const val TYPENAME = 0x1d
-    }
-
     override fun read(stream: SwfByteArrayReader) {
-        kind = stream.readUnsignedByte()
+        val kindIntValue = stream.readUnsignedByte()
+        kind = MultinameKinds.values().firstOrNull { it.intValue == kindIntValue }
+            ?: error("Unknown kind : $kindIntValue")
         when (kind) {
-            QNAME, QNAMEA -> {
+            MultinameKinds.QNAME, MultinameKinds.QNAMEA -> {
                 namespaceIndex = stream.readU30()
                 nameIndex = stream.readU30()
             }
-            RTQNAME, RTQNAMEA -> {
+
+            MultinameKinds.RTQNAME, MultinameKinds.RTQNAMEA -> {
                 nameIndex = stream.readU30()
             }
-            RTQNAMEL, RTQNAMELA -> {
+
+            MultinameKinds.RTQNAMEL, MultinameKinds.RTQNAMELA -> {
                 // Nothing
             }
-            MULTINAME, MULTINAMEA -> {
+
+            MultinameKinds.MULTINAME, MultinameKinds.MULTINAMEA -> {
                 nameIndex = stream.readU30()
                 namespaceSetIndex = stream.readU30()
             }
-            MULTINAMEL, MULTINAMELA -> {
+
+            MultinameKinds.MULTINAMEL, MultinameKinds.MULTINAMELA -> {
                 namespaceSetIndex = stream.readU30()
             }
-            TYPENAME -> {
+
+            MultinameKinds.TYPENAME -> {
                 qnameIndex = stream.readU30()
                 val paramsLength = stream.readU30()
                 for (i in 0 until paramsLength) {
                     params.add(stream.readU30())
                 }
             }
-            else -> error("Unknown kind of Multiname:0x" + Integer.toHexString(kind))
         }
     }
 
@@ -60,14 +53,14 @@ data class SwfMultiname(
     }
 
     fun getName(abc: Abc): String {
-        if (kind == TYPENAME) {
+        if (kind == MultinameKinds.TYPENAME) {
             return typeNameToStr(abc)
         }
         if (nameIndex == -1) {
             return ""
         }
         val suffix = if (nameIndex == 0) "*" else abc.constants.strings[nameIndex]
-        val prefix = if (isAttribute()) "@" else ""
+        val prefix = if (kind.isAttribute) "@" else ""
         return "$prefix$suffix"
     }
 
@@ -94,5 +87,4 @@ data class SwfMultiname(
         return typeNameStr.toString()
     }
 
-    private fun isAttribute() = listOf(QNAMEA, MULTINAMEA, RTQNAMEA, RTQNAMELA, MULTINAMELA).contains(kind)
 }

@@ -1,6 +1,7 @@
 package fr.lewon.swf.tools.reader.types
 
 import fr.lewon.swf.tools.reader.SwfByteArrayReader
+import fr.lewon.swf.tools.reader.types.traits.SwfTrait
 
 class SwfMethodBody(
     val minorVersion: Int,
@@ -28,4 +29,15 @@ class SwfMethodBody(
         }
         traits = stream.readSwfTraits()
     }
+
+    fun readCodeInstructions(abc: Abc): List<String> {
+        val instructions = ArrayList<String>()
+        val bar = SwfByteArrayReader(codeBytes)
+        while (bar.available() > 0) {
+            val instructionId = bar.readUnsignedByte()
+            println(instructionId)
+        }
+        return instructions
+    }
+
 }
